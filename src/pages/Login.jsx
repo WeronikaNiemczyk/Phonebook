@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../components/API';
 import { Button, Flex } from '@chakra-ui/react';
+import { Helmet } from 'react-helmet';
 
 export const Login = () => {
   const dispatch = useDispatch();
@@ -15,6 +16,9 @@ export const Login = () => {
 
   return (
     <Flex justifyContent="center" width="100%" mt="10" mb="10">
+      <Helmet>
+        <title>Login</title>
+      </Helmet>
       <form onSubmit={handleSubmit}>
         <label>
           Email

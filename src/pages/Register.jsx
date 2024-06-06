@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { registerUser } from '../components/API';
 import { Button, Flex } from '@chakra-ui/react';
+import { Helmet } from 'react-helmet';
 
 export const Register = () => {
   const dispatch = useDispatch();
@@ -16,6 +17,9 @@ export const Register = () => {
 
   return (
     <Flex justifyContent="center" width="100%" mt="10" mb="10">
+      <Helmet>
+        <title>Register</title>
+      </Helmet>
       <form onSubmit={handleSubmit}>
         <label>
           Name

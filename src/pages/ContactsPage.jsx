@@ -11,6 +11,7 @@ import { ContactForm } from '../components/ContactForm';
 import { ContactList } from '../components/ContactList';
 import { Filter } from '../components/Filtrer';
 import { Flex, Text } from '@chakra-ui/react';
+import { Helmet } from 'react-helmet';
 
 
 export const ContactsPage = () => {
@@ -42,6 +43,9 @@ export const ContactsPage = () => {
   return (
     <Flex justifyContent="center" width="100%" mt="10" mb="10">
       <div>
+        <Helmet>
+          <title>Contacts</title>
+        </Helmet>
         <ContactForm addContact={handleAddContact} />
         <Text justifyItems={'center'}>Contacts</Text>
         <Filter value={filter} />
