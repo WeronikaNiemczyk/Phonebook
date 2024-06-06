@@ -1,7 +1,8 @@
 import React from 'react';
-import {  useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import './App.module.css';
+import { Button } from '@chakra-ui/react';
 
 export const ContactList = ({ contacts, filter, deleteContact }) => {
   const dispatch = useDispatch();
@@ -10,7 +11,7 @@ export const ContactList = ({ contacts, filter, deleteContact }) => {
     contact.name.toLowerCase().includes(filter.toLowerCase())
   );
 
-  const handleDelete = (id ) => {
+  const handleDelete = id => {
     dispatch(deleteContact(id));
   };
 
@@ -36,7 +37,9 @@ const ContactItem = ({ contact, deleteContact }) => {
     <li>
       <div>
         {contact.name} - {contact.number}
-        <button onClick={onDelete}>Delete</button>
+        <Button bg="#bbd0f7" onClick={onDelete}>
+          Delete
+        </Button>
       </div>
     </li>
   );

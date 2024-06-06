@@ -1,61 +1,84 @@
 import React from 'react';
-import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ContactForm } from './ContactForm';
-import { ContactList } from './ContactList';
-import { Filter } from './Filtrer';
-import { fetchContact, addContact, deleteContact } from './API';
-import { setStatusFilter } from '../redux/filterSlice';
-import {
-  getFilter,
-  getContacts,
-  getIsLoading,
-  getError,
-} from '../redux/selectors';
+import { Route, Routes, Navigate } from 'react-router-dom';
+import { ContactsPage } from 'pages/ContactsPage';
+import { useEffect } from 'react';
+import { Login } from 'pages/Login';
+import { Register } from 'pages/Register';
+import Navigation from './Navigation';
+import { fetchCurrentUser } from './API';
+import { getIsLoggedIn, getIsFetchingCurrentUser } from '../redux/selectors';
+import UserMenu from './UserMenu';
+import { Box } from '@chakra-ui/react';
+import { Notify } from 'notiflix';
+import { useState } from 'react';
 
 export const App = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(getContacts);
-  const filter = useSelector(getFilter);
-  const isLoading = useSelector(getIsLoading);
-  const error = useSelector(getError);
+  const isLoggedIn = useSelector(getIsLoggedIn);
+  const isFetchingCurrentUser = useSelector(getIsFetchingCurrentUser);
+  const [hasAuth, setHasAuth] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchContact());
+    if (isLoggedIn) {
+      setHasAuth(true);
+    }
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    dispatch(fetchCurrentUser());
   }, [dispatch]);
 
-  const handleAddContact = (name, number) => {
-    const isInPhonebook = contacts.some(
-      phoneContact => phoneContact.name.toLowerCase() === name.toLowerCase()
-    );
-    if (isInPhonebook) {
-      alert(`${name} is already in contacts.`);
-    } else {
-      dispatch(addContact({name, number}));
-    }
+  const RegisterRedirect = ({ hasAuth }) => {
+    useEffect(() => {
+      if (hasAuth) {
+        Notify.info(
+          'You are already registered and logged in. Please log out first.'
+        );
+      }
+    }, [hasAuth]);
+
+    return isLoggedIn ? <Navigate to="/" /> : <Register />;
   };
 
-  const handleDeleteContact = id => {
-    dispatch(deleteContact(id));
+  const LoginRedirect = ({ hasAuth }) => {
+    useEffect(() => {
+      if (hasAuth) {
+        Notify.info('You are already logged in. Please log out first.');
+      }
+    }, [hasAuth]);
+
+    return isLoggedIn ? <Navigate to="/" /> : <Login />;
   };
 
-  const handleFilterChange = event => {
-    dispatch(setStatusFilter(event.target.value));
+  const ContactsLoginRedirect = () => {
+    useEffect(() => {
+      Notify.info('Please, log in or register.');
+    }, []);
+
+    return <Navigate to="/login" />;
   };
 
   return (
-    <div>
-      <h1>Phonebook</h1>
-      <ContactForm addContact={handleAddContact} />
-      <h2>Contacts</h2>
-      <Filter value={filter} onChange={handleFilterChange} />
-      <ContactList
-        contacts={contacts}
-        filter={filter}
-        deleteContact={handleDeleteContact}
-      />
-      {isLoading && <p>Loading...</p>}
-      {error && <p>Error: {error}</p>}
-    </div>
+    !isFetchingCurrentUser && (
+      <div>
+        <Box m={5} display="flex" justifyContent="center" fontSize={32}>
+          Phonebook
+        </Box>
+        <Navigation />
+        {isLoggedIn && <UserMenu />}
+        <Routes>
+          <Route
+            path="/register"
+            element={<RegisterRedirect hasAuth={hasAuth} />}
+          />
+          <Route path="/login" element={<LoginRedirect hasAuth={hasAuth} />} />
+          <Route
+            path="/contacts"
+            element={isLoggedIn ? <ContactsPage /> : <ContactsLoginRedirect />}
+          />
+        </Routes>
+      </div>
+    )
   );
 };
