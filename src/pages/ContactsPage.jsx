@@ -44,7 +44,7 @@ export const ContactsPage = () => {
     <Flex justifyContent="center" width="100%" mt="10" mb="10">
       <div>
         <Helmet>
-          <title>Contacts</title>
+          <title>Phonebook Contacts</title>
         </Helmet>
         <ContactForm addContact={handleAddContact} />
         <Text justifyItems={'center'}>Contacts</Text>

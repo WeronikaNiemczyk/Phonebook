@@ -17,7 +17,7 @@ export const Login = () => {
   return (
     <Flex justifyContent="center" width="100%" mt="10" mb="10">
       <Helmet>
-        <title>Login</title>
+        <title>Phonebook Login</title>
       </Helmet>
       <form onSubmit={handleSubmit}>
         <label>

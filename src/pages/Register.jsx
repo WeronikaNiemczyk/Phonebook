@@ -18,7 +18,7 @@ export const Register = () => {
   return (
     <Flex justifyContent="center" width="100%" mt="10" mb="10">
       <Helmet>
-        <title>Register</title>
+        <title>Phonebook Register</title>
       </Helmet>
       <form onSubmit={handleSubmit}>
         <label>
